@@ -1,24 +1,21 @@
-use rand::seq::IndexedRandom;
+mod scraper;
+mod spinner;
+mod pagination;
 
-// takes in a array of strings with movie titles
-fn spin_wheel(movies: &[String]) {
-    let mut rng = rand::rng();
+use std::io::{self, Write};
 
-    // just chooses movie title on random
-    let chosen = movies.choose(&mut rng).unwrap();
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    print!("Enter your Letterboxd username: ");
+    io::stdout().flush()?;  // Flush to show prompt immediately
 
-    //trying to figure out how to give the user a sense of spinning wheel
-    // or maybe i should add like a matrix decoder effect instead?
+    let mut username = String::new();
+    io::stdin().read_line(&mut username)?;
+    let username = username.trim();
 
-    println!("\nYou should watch: {}", chosen);
-}
+    let movies = scraper::fetch_watchlist(&username).await?;
 
-fn main() {
-    let movies = vec![
-        "Spirited Away".to_string(),
-        "Your Name".to_string(),
-        "Akira".to_string(),
-        "Perfect Blue".to_string(),
-    ];
-    spin_wheel(&movies);
+    spinner::spin_wheel(&movies);
+
+    Ok(())
 }
