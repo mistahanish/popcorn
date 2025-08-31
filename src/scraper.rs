@@ -44,7 +44,7 @@ pub async fn fetch_watchlist(
         for element in document.select(&selector) {
             if let Some(name) = element.value().attr("data-item-full-display-name") {
                 //ok fixed this line
-                println!("Found movie: {}", name); // Debugging line
+                //println!("Found movie: {}", name); // Debugging line
                 if let Some(slug) = element.value().attr("data-target-link") {
                     let full_url = format!("https://letterboxd.com{}", slug);
                     //println!("Full URL: {}", full_url); // Debugging line
